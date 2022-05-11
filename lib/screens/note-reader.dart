@@ -15,15 +15,47 @@ class NoteReaderScreen extends StatefulWidget {
 
 class _NoteReaderScreenState extends State<NoteReaderScreen> {
   String date = DateTime.now().toString();
+  int color_id = 0;
+  String note_title = "";
+  String note_content = "";
+  TextEditingController _titleController =
+      TextEditingController(); //su dung kieu private
+  TextEditingController _mainController = TextEditingController();
+
+  void update() async {
+    await FirebaseFirestore.instance
+        .collection("Notes")
+        .doc(widget.doc.id)
+        .update({
+      "note_title": _titleController.text,
+      "creation": date,
+      "note_content": _mainController.text,
+      "color_id": color_id,
+    }).then((value) {
+      Navigator.pop(context);
+    }).catchError((erro) => print("Failed to update new Note due to $erro"));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    color_id = widget.doc["color_id"];
+    note_title = widget.doc["note_title"];
+    note_content = widget.doc["note_content"];
+    _titleController = TextEditingController(text: note_title);
+    _mainController = TextEditingController(text: note_content);
+  }
+
   @override
   Widget build(BuildContext context) {
-    int color_id = widget.doc["color_id"];
-    String note_title = widget.doc["note_title"];
-    String note_content = widget.doc["note_content"];
-    TextEditingController _titleController =
-        TextEditingController(text: note_title);
-    TextEditingController _mainController =
-        TextEditingController(text: note_content);
+    // int color_id = widget.doc["color_id"];
+    // String note_title = widget.doc["note_title"];
+    // String note_content = widget.doc["note_content"];
+    // TextEditingController _titleController =
+    //     TextEditingController(text: note_title);
+    // TextEditingController _mainController =
+    //     TextEditingController(text: note_content);
     return Scaffold(
       backgroundColor: AppStyle.cardsColor[color_id],
       appBar: AppBar(
@@ -33,18 +65,19 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              FirebaseFirestore.instance
-                  .collection("Notes")
-                  .doc(widget.doc.id)
-                  .update({
-                "note_title": _titleController.text,
-                "creation": date,
-                "note_content": _mainController.text,
-                "color_id": color_id,
-              }).then((value) {
-                Navigator.pop(context);
-              }).catchError((erro) =>
-                      print("Failed to update new Note due to $erro"));
+              // FirebaseFirestore.instance
+              //     .collection("Notes")
+              //     .doc(widget.doc.id)
+              //     .update({
+              //   "note_title": _titleController.text,
+              //   "creation": date,
+              //   "note_content": _mainController.text,
+              //   "color_id": color_id,
+              // }).then((value) {
+              //   Navigator.pop(context);
+              // }).catchError((erro) =>
+              //         print("Failed to update new Note due to $erro"));
+              update();
             },
             icon: Icon(Icons.save),
           ),
