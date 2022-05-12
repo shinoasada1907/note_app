@@ -15,8 +15,17 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
   String date = DateTime.now().toString();
 
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _mainController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _mainController = TextEditingController();
+
+  void addData() async {
+    await FirebaseFirestore.instance.collection("Notes").add({
+      "note_title": _titleController.text,
+      "creation": date,
+      "note_content": _mainController.text,
+      "color_id": color_id,
+    }).whenComplete(() => Navigator.pop(context));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +33,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       backgroundColor: AppStyle.cardsColor[color_id],
       appBar: AppBar(
         backgroundColor: AppStyle.cardsColor[color_id],
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text(
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Text(
           'Add a new Note',
           style: TextStyle(
             color: Colors.black,
@@ -40,27 +49,27 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           children: [
             TextField(
               controller: _titleController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Note title',
               ),
               style: AppStyle.mainTitle,
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Text(
               date,
               style: AppStyle.dateTitle,
             ),
-            SizedBox(
+            const SizedBox(
               height: 28,
             ),
             TextField(
               controller: _mainController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Note content',
               ),
@@ -71,14 +80,14 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppStyle.accentColor,
-        onPressed: () async {
-          await FirebaseFirestore.instance.collection("Notes").add({
-            "note_title": _titleController.text,
-            "creation": date,
-            "note_content": _mainController.text,
-            "color_id": color_id,
-          }).whenComplete(() => Navigator.pop(context));
-          Navigator.pop(context);
+        onPressed: () {
+          // FirebaseFirestore.instance.collection("Notes").add({
+          //   "note_title": _titleController.text,
+          //   "creation": date,
+          //   "note_content": _mainController.text,
+          //   "color_id": color_id,
+          // }).whenComplete(() => Navigator.pop(context));
+          addData();
         },
         child: const Icon(Icons.save),
       ),

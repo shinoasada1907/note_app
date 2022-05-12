@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:notes_app/screens/home_screen.dart';
-import 'package:notes_app/screens/note_editor.dart';
 import 'package:notes_app/style/app_style.dart';
 
 class NoteReaderScreen extends StatefulWidget {
@@ -33,7 +30,20 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
       "color_id": color_id,
     }).then((value) {
       Navigator.pop(context);
-    }).catchError((erro) => print("Failed to update new Note due to $erro"));
+    }).catchError((erro) {
+      print("Failed to update new Note due to $erro");
+    });
+  }
+
+  void delete() async {
+    await FirebaseFirestore.instance
+        .collection("Notes")
+        .doc(widget.doc.id)
+        .delete()
+        .then((value) {
+      print('Delete seccess');
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }, onError: (error) => print("Fail ${error}"));
   }
 
   @override
@@ -59,7 +69,7 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
     return Scaffold(
       backgroundColor: AppStyle.cardsColor[color_id],
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         backgroundColor: AppStyle.cardsColor[color_id],
         elevation: 0,
         actions: [
@@ -79,43 +89,44 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
               //         print("Failed to update new Note due to $erro"));
               update();
             },
-            icon: Icon(Icons.save),
+            icon: const Icon(Icons.save),
           ),
           IconButton(
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text('Yes?'),
+                  title: const Text('Yes?'),
                   content:
                       Text("Do you want to Delete ${_titleController.text}"),
                   backgroundColor: AppStyle.cardsColor[color_id],
                   actions: [
                     TextButton(
                       onPressed: () {
-                        FirebaseFirestore.instance
-                            .collection("Notes")
-                            .doc(widget.doc.id)
-                            .delete()
-                            .then((value) {
-                          print('Delete seccess');
-                          Navigator.of(context)
-                              .popUntil((route) => route.isFirst);
-                        }, onError: (error) => print("Fail ${error}"));
+                        // FirebaseFirestore.instance
+                        //     .collection("Notes")
+                        //     .doc(widget.doc.id)
+                        //     .delete()
+                        //     .then((value) {
+                        //   print('Delete seccess');
+                        //   Navigator.of(context)
+                        //       .popUntil((route) => route.isFirst);
+                        // }, onError: (error) => print("Fail ${error}"));
+                        delete();
                       },
-                      child: Text('Yes'),
+                      child: const Text('Yes'),
                     ),
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text('No'),
+                      child: const Text('No'),
                     ),
                   ],
                 ),
               );
             },
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
           ),
         ],
       ),
@@ -126,26 +137,26 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
           children: [
             TextField(
               controller: _titleController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
               ),
               style: AppStyle.mainTitle,
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Text(
               date,
               style: AppStyle.dateTitle,
             ),
-            SizedBox(
+            const SizedBox(
               height: 28,
             ),
             TextField(
               controller: _mainController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
               ),
               style: AppStyle.mainContent,

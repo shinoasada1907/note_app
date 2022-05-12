@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notes_app/screens/note-reader.dart';
 import 'package:notes_app/screens/note_editor.dart';
-import 'package:notes_app/style/app_style.dart';
 import 'package:notes_app/widgets/note_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        title: Text(
+        title: const Text(
           'FireNotes',
           style: TextStyle(
             color: Colors.black,
@@ -44,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Expanded(
@@ -54,14 +53,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   //kiểm tra kết nối với dữ liệu
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
                   if (snapshot.hasData) {
                     return GridView(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2),
                       children: snapshot.data!.docs
                           .map((note) => notecard(() {
                                 Navigator.push(
@@ -90,12 +90,12 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => NoteEditorScreen(),
+              builder: (context) => const NoteEditorScreen(),
             ),
           );
         },
-        label: Text('Add Note'),
-        icon: Icon(Icons.add),
+        label: const Text('Add Note'),
+        icon: const Icon(Icons.add),
       ),
     );
   }
