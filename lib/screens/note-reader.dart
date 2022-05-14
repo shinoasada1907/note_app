@@ -30,8 +30,6 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
       "color_id": color_id,
     }).then((value) {
       Navigator.pop(context);
-    }).catchError((erro) {
-      print("Failed to update new Note due to $erro");
     });
   }
 
@@ -43,7 +41,7 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
         .then((value) {
       print('Delete seccess');
       Navigator.of(context).popUntil((route) => route.isFirst);
-    }, onError: (error) => print("Fail ${error}"));
+    });
   }
 
   @override
