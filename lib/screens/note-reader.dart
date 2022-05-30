@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:notes_app/style/app_style.dart';
 
 class NoteReaderScreen extends StatefulWidget {
@@ -11,7 +12,7 @@ class NoteReaderScreen extends StatefulWidget {
 }
 
 class _NoteReaderScreenState extends State<NoteReaderScreen> {
-  String date = DateTime.now().toString();
+  String date = "";
   int color_id = 0;
   String note_title = "";
   String note_content = "";
@@ -25,7 +26,8 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
         .doc(widget.doc.id)
         .update({
       "note_title": _titleController.text,
-      "creation": date,
+      "creation":
+          DateFormat('E,dMMM yyyy HH:mm').format(DateTime.now()).toString(),
       "note_content": _mainController.text,
       "color_id": color_id,
     }).then((value) {
@@ -51,6 +53,7 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
     color_id = widget.doc["color_id"];
     note_title = widget.doc["note_title"];
     note_content = widget.doc["note_content"];
+    date = widget.doc["creation"];
     _titleController = TextEditingController(text: note_title);
     _mainController = TextEditingController(text: note_content);
   }

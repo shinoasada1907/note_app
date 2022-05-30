@@ -17,7 +17,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   int color_id = Random().nextInt(AppStyle.cardsColor.length);
 
   String date =
-      DateFormat('E,dMMM yyyy HH:mm:ss').format(DateTime.now()).toString();
+      DateFormat('E,dMMM yyyy HH:mm').format(DateTime.now()).toString();
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _mainController = TextEditingController();
