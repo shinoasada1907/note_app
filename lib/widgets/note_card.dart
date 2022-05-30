@@ -16,9 +16,9 @@ Widget notecard(Function()? onTap, QueryDocumentSnapshot doc) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            doc["note_title"],
-            style: AppStyle.mainTitle,
-          ),
+                doc["note_title"],
+                style: AppStyle.mainTitle,
+              ),
           const SizedBox(
             height: 4,
           ),

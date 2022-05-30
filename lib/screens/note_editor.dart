@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:notes_app/style/app_style.dart';
 
 class NoteEditorScreen extends StatefulWidget {
@@ -11,9 +12,12 @@ class NoteEditorScreen extends StatefulWidget {
 }
 
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
+  bool _iconColor = false;
+
   int color_id = Random().nextInt(AppStyle.cardsColor.length);
 
-  String date = DateTime.now().toString();
+  String date =
+      DateFormat('E,dMMM yyyy HH:mm:ss').format(DateTime.now()).toString();
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _mainController = TextEditingController();
@@ -41,6 +45,20 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           ),
         ),
         elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _iconColor = !_iconColor;
+              });
+            },
+            icon: Icon(
+              Icons.star,
+              color: _iconColor ? Colors.yellow : Colors.white,
+              size: 30,
+            ),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
