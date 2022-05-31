@@ -28,6 +28,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       "creation": date,
       "note_content": _mainController.text,
       "color_id": color_id,
+      "important": _iconColor,
     }).whenComplete(() => Navigator.pop(context));
   }
 
@@ -46,16 +47,19 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         ),
         elevation: 0,
         actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _iconColor = !_iconColor;
-              });
-            },
-            icon: Icon(
-              Icons.star,
-              color: _iconColor ? Colors.yellow : Colors.white,
-              size: 30,
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              onPressed: () {
+                setState(() {
+                  _iconColor = !_iconColor;
+                });
+              },
+              icon: Icon(
+                Icons.star,
+                color: _iconColor ? Colors.yellow : Colors.white,
+                size: 30,
+              ),
             ),
           )
         ],

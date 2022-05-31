@@ -12,6 +12,7 @@ class NoteReaderScreen extends StatefulWidget {
 }
 
 class _NoteReaderScreenState extends State<NoteReaderScreen> {
+  bool _iconColor = false;
   String date = "";
   int color_id = 0;
   String note_title = "";
@@ -30,6 +31,7 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
           DateFormat('E,dMMM yyyy HH:mm').format(DateTime.now()).toString(),
       "note_content": _mainController.text,
       "color_id": color_id,
+      "important": _iconColor,
     }).then((value) {
       Navigator.pop(context);
     });
@@ -54,6 +56,7 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
     note_title = widget.doc["note_title"];
     note_content = widget.doc["note_content"];
     date = widget.doc["creation"];
+    _iconColor = widget.doc["important"];
     _titleController = TextEditingController(text: note_title);
     _mainController = TextEditingController(text: note_content);
   }
@@ -128,6 +131,21 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
               );
             },
             icon: const Icon(Icons.delete),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              onPressed: () {
+                setState(() {
+                  _iconColor = !_iconColor;
+                });
+              },
+              icon: Icon(
+                Icons.star,
+                color: _iconColor ? Colors.yellow : Colors.white,
+                size: 30,
+              ),
+            ),
           ),
         ],
       ),

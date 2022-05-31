@@ -15,10 +15,19 @@ Widget notecard(Function()? onTap, QueryDocumentSnapshot doc) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
                 doc["note_title"],
                 style: AppStyle.mainTitle,
               ),
+              Icon(
+                Icons.star,
+                color: doc["important"] ? Colors.yellow : Colors.white,
+              ),
+            ],
+          ),
           const SizedBox(
             height: 4,
           ),

@@ -48,8 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream:
-                    FirebaseFirestore.instance.collection("Notes").snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection("Notes")
+                    .orderBy("important", descending: true)
+                    .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   //kiểm tra kết nối với dữ liệu
                   if (snapshot.connectionState == ConnectionState.waiting) {
