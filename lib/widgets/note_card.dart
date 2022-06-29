@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:notes_app/style/app_style.dart';
 
 Widget notecard(Function()? onTap, QueryDocumentSnapshot doc) {
@@ -18,9 +19,13 @@ Widget notecard(Function()? onTap, QueryDocumentSnapshot doc) {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                doc["note_title"],
-                style: AppStyle.mainTitle,
+              Expanded(
+                child: Text(
+                  doc["note_title"],
+                  style: AppStyle.mainTitle,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
               Icon(
                 Icons.star,

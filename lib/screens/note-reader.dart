@@ -44,7 +44,8 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
         .delete()
         .then((value) {
       print('Delete seccess');
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
     });
   }
 

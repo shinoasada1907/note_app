@@ -18,16 +18,63 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 0,
         title: const Text(
           'FireNotes',
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 35,
           ),
         ),
         centerTitle: true,
         backgroundColor: Colors.lightBlue,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: PopupMenuButton(
+              color: Colors.lightBlue,
+              icon: const Icon(
+                Icons.people,
+                size: 30,
+              ),
+              onSelected: (item) => onSelected(context, item),
+              itemBuilder: (context) => [
+                const PopupMenuItem<int>(
+                  child: Text(
+                    'Profile',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  value: 0,
+                ),
+                const PopupMenuItem<int>(
+                  child: Text(
+                    'Setting',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  value: 1,
+                ),
+                PopupMenuItem<int>(
+                  child: Row(
+                    children: const [
+                      Icon(
+                        Icons.logout,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Signout',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  value: 2,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -100,5 +147,17 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: const Icon(Icons.add),
       ),
     );
+  }
+
+  onSelected(BuildContext context, Object? item) {
+    switch (item) {
+      case 0:
+        break;
+      case 1:
+        break;
+      case 2:
+        Navigator.pop(context);
+        break;
+    }
   }
 }
