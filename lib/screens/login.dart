@@ -35,6 +35,28 @@ class _LoginPageState extends State<LoginPage> {
     return user;
   }
 
+  Future<User?> signUp(String email, String password) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try {
+      await auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) async {
+        user = auth.currentUser;
+        await FirebaseFirestore.instance
+            .collection("Users")
+            .doc(value.user?.uid)
+            .set({
+          'uid': user?.uid,
+          'email': email,
+          'password': password,
+        });
+      });
+      return user;
+      // user = userCredential.user;
+    } catch (e) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

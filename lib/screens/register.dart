@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:notes_app/main.dart';
+import 'package:notes_app/screens/home_screen.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -13,22 +16,26 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  void register() {
-    FirebaseFirestore.instance
-        .collection("User")
-        .where("username", isEqualTo: _usernameController.text)
-        .get()
-        .then(
-      (value) {
-        FirebaseFirestore.instance.collection("User").add({
-          "fullname": _fullnameController.text,
-          "username": _usernameController.text,
-          "password": _passwordController.text
-        }).whenComplete(
-          () => Navigator.pop(context),
-        );
-      },
-    );
+  Future<User?> signUp(String email, String password) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try {
+      await auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) async {
+        user = auth.currentUser;
+        await FirebaseFirestore.instance
+            .collection("Users")
+            .doc(value.user?.uid)
+            .set({
+          'uid': user?.uid,
+          'email': email,
+          'password': password,
+        });
+      });
+      return user;
+      // user = userCredential.user;
+    } catch (e) {}
   }
 
   @override
@@ -64,30 +71,30 @@ class _RegisterPageState extends State<RegisterPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TextField(
-          controller: _fullnameController,
-          decoration: InputDecoration(
-              hintText: "Fullname",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide.none),
-              fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-              filled: true,
-              prefixIcon: const Icon(Icons.person)),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
+        // TextField(
+        //   controller: _fullnameController,
+        //   decoration: InputDecoration(
+        //       hintText: "Fullname",
+        //       border: OutlineInputBorder(
+        //           borderRadius: BorderRadius.circular(18),
+        //           borderSide: BorderSide.none),
+        //       fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
+        //       filled: true,
+        //       prefixIcon: const Icon(Icons.person)),
+        // ),
+        // const SizedBox(
+        //   height: 10,
+        // ),
         TextField(
           controller: _usernameController,
           decoration: InputDecoration(
-              hintText: "Username",
+              hintText: "Email",
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(18),
                   borderSide: BorderSide.none),
               fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
               filled: true,
-              prefixIcon: const Icon(Icons.person)),
+              prefixIcon: const Icon(Icons.email)),
         ),
         const SizedBox(height: 10),
         TextField(
@@ -99,14 +106,24 @@ class _RegisterPageState extends State<RegisterPage> {
                 borderSide: BorderSide.none),
             fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
             filled: true,
-            prefixIcon: const Icon(Icons.person),
+            prefixIcon: const Icon(Icons.security),
           ),
           obscureText: true,
         ),
         const SizedBox(height: 10),
         ElevatedButton(
-          onPressed: () {
-            register();
+          onPressed: () async {
+            User? user = await signUp(
+                _usernameController.text, _passwordController.text);
+            if (user != null) {
+              print('Sign Up success!');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(),
+                ),
+              );
+            }
           },
           child: const Text(
             "Register",
