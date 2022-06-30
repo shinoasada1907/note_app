@@ -14,6 +14,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final users = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection("Notes")
+                    //.where('uid', isEqualTo: users.uid)
                     .orderBy("important", descending: true)
                     .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -153,12 +156,14 @@ class _HomeScreenState extends State<HomeScreen> {
   onSelected(BuildContext context, Object? item) {
     switch (item) {
       case 0:
+        print('Email: ' + users.email!);
+        print('Uid: ' + users.uid);
         break;
       case 1:
         break;
       case 2:
         FirebaseAuth.instance.signOut();
-        Navigator.pop(context);
+        Navigator.of(context).popUntil((route) => route.isFirst);
         break;
     }
   }

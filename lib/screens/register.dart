@@ -12,7 +12,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  TextEditingController _fullnameController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
@@ -42,6 +41,16 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          title: const Text(
+            'Forgot Password',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          ),
+        ),
         body: Container(
           margin: const EdgeInsets.all(24),
           child: Column(
@@ -116,6 +125,8 @@ class _RegisterPageState extends State<RegisterPage> {
             User? user = await signUp(
                 _usernameController.text, _passwordController.text);
             if (user != null) {
+              _usernameController.clear();
+              _passwordController.clear();
               print('Sign Up success!');
               Navigator.push(
                 context,

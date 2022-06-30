@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPass extends StatefulWidget {
@@ -9,30 +10,49 @@ class ForgotPass extends StatefulWidget {
 }
 
 class _ForgotPassState extends State<ForgotPass> {
-  TextEditingController _confirmpasswordController = TextEditingController();
-  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  void forgotpassword() {
-    FirebaseFirestore.instance
-        .collection("User")
-        .where("username", isEqualTo: _usernameController.text)
-        .get()
-        .then(
-      (value) {
-        FirebaseFirestore.instance.collection("User").doc().update(
-          {"password": _passwordController.text},
-        ).whenComplete(
-          () => Navigator.pop(context),
-        );
-      },
-    );
+  Future forgotPassword() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try {
+      await auth
+          .sendPasswordResetEmail(email: _emailController.text)
+          .then((value) => Navigator.pop(context));
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+              content: Text('Password reset link sent! Check your email!'),
+            );
+          });
+    } on FirebaseAuthException catch (e) {
+      print(e);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(e.message.toString()),
+            );
+          });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          title: const Text(
+            'Forgot Password',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          ),
+        ),
         body: Container(
           margin: const EdgeInsets.all(24),
           child: Column(
@@ -62,51 +82,52 @@ class _ForgotPassState extends State<ForgotPass> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // TextField(
+        //   controller: _usernameController,
+        //   decoration: InputDecoration(
+        //       hintText: "Username",
+        //       border: OutlineInputBorder(
+        //           borderRadius: BorderRadius.circular(18),
+        //           borderSide: BorderSide.none),
+        //       fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
+        //       filled: true,
+        //       prefixIcon: const Icon(Icons.person)),
+        // ),
+        // const SizedBox(
+        //   height: 10,
+        // ),
         TextField(
-          controller: _usernameController,
+          controller: _emailController,
           decoration: InputDecoration(
-              hintText: "Username",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide.none),
-              fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-              filled: true,
-              prefixIcon: const Icon(Icons.person)),
+            hintText: "Email Address",
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(18),
+                borderSide: BorderSide.none),
+            fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            filled: true,
+            prefixIcon: const Icon(Icons.email),
+          ),
         ),
-        const SizedBox(
-          height: 10,
-        ),
+        const SizedBox(height: 18),
         TextField(
           controller: _passwordController,
           decoration: InputDecoration(
-            hintText: "Password",
+            hintText: "New password",
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),
                 borderSide: BorderSide.none),
             fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
             filled: true,
-            prefixIcon: const Icon(Icons.person),
+            prefixIcon: const Icon(Icons.security),
           ),
           obscureText: true,
         ),
-        const SizedBox(height: 10),
-        TextField(
-          controller: _confirmpasswordController,
-          decoration: InputDecoration(
-            hintText: "Confirm password",
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none),
-            fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            filled: true,
-            prefixIcon: const Icon(Icons.person),
-          ),
-          obscureText: true,
-        ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         ElevatedButton(
           onPressed: () {
-            forgotpassword();
+            _emailController.clear;
+            _passwordController.clear;
+            forgotPassword();
           },
           child: const Text(
             "Complete",

@@ -139,17 +139,30 @@ class _LoginPageState extends State<LoginPage> {
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: () async {
-            User? user = await loginUsingEmailPasswrd(
-                email: _usernameController.text,
-                password: _passwordController.text,
-                context: context);
-            if (user != null) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const HomeScreen(),
-                ),
-              );
+            if (_usernameController.text == '' ||
+                _passwordController.text == '') {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const AlertDialog(
+                      content: Text('Please complete to email and password'),
+                    );
+                  });
+            } else {
+              User? user = await loginUsingEmailPasswrd(
+                  email: _usernameController.text,
+                  password: _passwordController.text,
+                  context: context);
+              if (user != null) {
+                _usernameController.clear();
+                _passwordController.clear();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomeScreen(),
+                  ),
+                );
+              }
             }
           },
           child: const Text(
@@ -176,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
       child: const Text(
-        "Forgot password?",
+        "Forget password?",
       ),
     );
   }

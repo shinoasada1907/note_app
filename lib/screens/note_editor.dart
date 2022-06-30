@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:notes_app/style/app_style.dart';
@@ -12,6 +14,7 @@ class NoteEditorScreen extends StatefulWidget {
 }
 
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
+  final users = FirebaseAuth.instance.currentUser!;
   bool _iconColor = false;
 
   int color_id = Random().nextInt(AppStyle.cardsColor.length);
@@ -29,6 +32,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       "note_content": _mainController.text,
       "color_id": color_id,
       "important": _iconColor,
+      "uid": users.uid,
     }).whenComplete(() => Navigator.pop(context));
   }
 
