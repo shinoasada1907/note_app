@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notes_app/screens/note-reader.dart';
@@ -156,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         break;
       case 2:
+        FirebaseAuth.instance.signOut();
         Navigator.pop(context);
         break;
     }

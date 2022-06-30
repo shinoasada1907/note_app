@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notes_app/screens/forgotpassword.dart';
 import 'package:notes_app/screens/home_screen.dart';
@@ -16,24 +17,22 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  void login() {
-    FirebaseFirestore.instance
-        .collection("User")
-        .where("username", isEqualTo: _usernameController.text)
-        .where("password", isEqualTo: _passwordController.text)
-        .get()
-        .then(
-          (value) => {
-            print(_usernameController.text),
-            print(_passwordController.text),
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(),
-              ),
-            ),
-          },
-        );
+  Future<User?> loginUsingEmailPasswrd(
+      {required String email,
+      required String password,
+      required BuildContext context}) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try {
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      user = userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No User found for that email');
+      }
+    }
+    return user;
   }
 
   @override
@@ -60,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       children: const [
         Text(
-          "Welcome To Note App",
+          "Welcome To NoteApp",
           style: TextStyle(
               fontSize: 35,
               fontWeight: FontWeight.bold,
@@ -106,10 +105,30 @@ class _LoginPageState extends State<LoginPage> {
           ),
           obscureText: true,
         ),
+        const SizedBox(
+          height: 10,
+        ),
+        const Text(
+          "Don't forget your password",
+          style: TextStyle(
+            color: Colors.lightBlue,
+          ),
+        ),
         const SizedBox(height: 10),
         ElevatedButton(
-          onPressed: () {
-            login();
+          onPressed: () async {
+            User? user = await loginUsingEmailPasswrd(
+                email: _usernameController.text,
+                password: _passwordController.text,
+                context: context);
+            if (user != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomeScreen(),
+                ),
+              );
+            }
           },
           child: const Text(
             "Login",
