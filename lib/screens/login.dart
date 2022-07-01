@@ -105,13 +105,14 @@ class _LoginPageState extends State<LoginPage> {
         TextField(
           controller: _usernameController,
           decoration: InputDecoration(
-              hintText: "Username",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide.none),
-              fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-              filled: true,
-              prefixIcon: const Icon(Icons.person)),
+            hintText: "Email",
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(18),
+                borderSide: BorderSide.none),
+            fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            filled: true,
+            prefixIcon: const Icon(Icons.email),
+          ),
         ),
         const SizedBox(height: 10),
         TextField(
@@ -149,19 +150,32 @@ class _LoginPageState extends State<LoginPage> {
                     );
                   });
             } else {
-              User? user = await loginUsingEmailPasswrd(
-                  email: _usernameController.text,
-                  password: _passwordController.text,
-                  context: context);
-              if (user != null) {
-                _usernameController.clear();
-                _passwordController.clear();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomeScreen(),
-                  ),
-                );
+              if (RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                      .hasMatch(_usernameController.text) &&
+                  _passwordController.text.length >= 6) {
+                User? user = await loginUsingEmailPasswrd(
+                    email: _usernameController.text,
+                    password: _passwordController.text,
+                    context: context);
+                if (user != null) {
+                  _usernameController.clear();
+                  _passwordController.clear();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomeScreen(),
+                    ),
+                  );
+                }
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const AlertDialog(
+                        content: Text(
+                            'Wrong email or passwpord! Please complete again!'),
+                      );
+                    });
               }
             }
           },

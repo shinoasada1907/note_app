@@ -108,26 +108,48 @@ class _ForgotPassState extends State<ForgotPass> {
             prefixIcon: const Icon(Icons.email),
           ),
         ),
-        const SizedBox(height: 18),
-        TextField(
-          controller: _passwordController,
-          decoration: InputDecoration(
-            hintText: "New password",
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none),
-            fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            filled: true,
-            prefixIcon: const Icon(Icons.security),
-          ),
-          obscureText: true,
-        ),
+        // const SizedBox(height: 18),
+        // TextField(
+        //   controller: _passwordController,
+        //   decoration: InputDecoration(
+        //     hintText: "New password",
+        //     border: OutlineInputBorder(
+        //         borderRadius: BorderRadius.circular(18),
+        //         borderSide: BorderSide.none),
+        //     fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
+        //     filled: true,
+        //     prefixIcon: const Icon(Icons.security),
+        //   ),
+        //   obscureText: true,
+        // ),
         const SizedBox(height: 20),
         ElevatedButton(
           onPressed: () {
-            _emailController.clear;
-            _passwordController.clear;
-            forgotPassword();
+            //_emailController.clear;
+            //_passwordController.clear;
+            if (_emailController.text != '') {
+              if (RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                  .hasMatch(_emailController.text)) {
+                forgotPassword();
+                _emailController.clear;
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const AlertDialog(
+                        content: Text('Email must be in the correct format!'),
+                      );
+                    });
+              }
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const AlertDialog(
+                      content: Text('Please enter your email!'),
+                    );
+                  });
+            }
           },
           child: const Text(
             "Complete",

@@ -122,18 +122,31 @@ class _RegisterPageState extends State<RegisterPage> {
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: () async {
-            User? user = await signUp(
-                _usernameController.text, _passwordController.text);
-            if (user != null) {
-              _usernameController.clear();
-              _passwordController.clear();
-              print('Sign Up success!');
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeScreen(),
-                ),
-              );
+            if (RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                    .hasMatch(_usernameController.text) &&
+                _passwordController.text.length >= 6) {
+              User? user = await signUp(
+                  _usernameController.text, _passwordController.text);
+              if (user != null) {
+                _usernameController.clear();
+                _passwordController.clear();
+                print('Sign Up success!');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ),
+                );
+              }
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const AlertDialog(
+                      content: Text(
+                          'Email must be in the correct format and password must be at least 6 characters! Please enter again!'),
+                    );
+                  });
             }
           },
           child: const Text(
