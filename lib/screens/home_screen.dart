@@ -85,13 +85,25 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Your recent Notes',
-              style: GoogleFonts.roboto(
-                fontSize: 22,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Your recent Notes',
+                  style: GoogleFonts.roboto(
+                    fontSize: 22,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.search,
+                    size: 35,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 20,
@@ -100,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection("Notes")
-                    //.where('uid', isEqualTo: users.uid)
+                    .where("uid", isEqualTo: users.uid)
                     .orderBy("important", descending: true)
                     .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -130,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   return Text(
                     'There is no Notes',
-                    style: GoogleFonts.nunito(color: Colors.white),
+                    style: GoogleFonts.nunito(color: Colors.black),
                   );
                 },
               ),
