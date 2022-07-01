@@ -20,7 +20,8 @@ class _RegisterPageState extends State<RegisterPage> {
     User? user;
     try {
       await auth
-          .createUserWithEmailAndPassword(email: email, password: password)
+          .createUserWithEmailAndPassword(
+              email: email.trim(), password: password.trim())
           .then((value) async {
         user = auth.currentUser;
         await FirebaseFirestore.instance

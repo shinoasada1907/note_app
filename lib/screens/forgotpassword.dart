@@ -18,7 +18,7 @@ class _ForgotPassState extends State<ForgotPass> {
     User? user;
     try {
       await auth
-          .sendPasswordResetEmail(email: _emailController.text)
+          .sendPasswordResetEmail(email: _emailController.text.trim())
           .then((value) => Navigator.pop(context));
       showDialog(
           context: context,

@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     User? user;
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: email.trim(), password: password.trim());
       user = userCredential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -150,9 +150,18 @@ class _LoginPageState extends State<LoginPage> {
                     );
                   });
             } else {
-              if (RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-                      .hasMatch(_usernameController.text) &&
-                  _passwordController.text.length >= 6) {
+              if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                      .hasMatch(_usernameController.text) ||
+                  _passwordController.text.length < 6) {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const AlertDialog(
+                        content: Text(
+                            'Wrong email or passwpord! Please complete again!'),
+                      );
+                    });
+              } else {
                 User? user = await loginUsingEmailPasswrd(
                     email: _usernameController.text,
                     password: _passwordController.text,
@@ -167,15 +176,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   );
                 }
-              } else {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const AlertDialog(
-                        content: Text(
-                            'Wrong email or passwpord! Please complete again!'),
-                      );
-                    });
               }
             }
           },
