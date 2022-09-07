@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:notes_app/screens/note-reader.dart';
-import 'package:notes_app/screens/note_editor.dart';
-import 'package:notes_app/widgets/note_card.dart';
+import 'package:notes_app/views/screens/note-reader.dart';
+import 'package:notes_app/views/screens/note_editor.dart';
+import 'package:notes_app/views/widgets/note_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

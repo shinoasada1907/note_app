@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:notes_app/screens/forgotpassword.dart';
-import 'package:notes_app/screens/home_screen.dart';
-import 'package:notes_app/screens/register.dart';
+import 'package:notes_app/views/screens/forgotpassword.dart';
+import 'package:notes_app/views/screens/home_screen.dart';
+import 'package:notes_app/views/screens/register.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -63,14 +63,16 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         body: Container(
           margin: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _header(context),
-              _inputField(context),
-              _forgotPassword(context),
-              _signup(context),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _header(context),
+                _inputField(context),
+                _forgotPassword(context),
+                _signup(context),
+              ],
+            ),
           ),
         ),
       ),
