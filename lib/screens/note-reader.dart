@@ -1,7 +1,9 @@
+// ignore_for_file: file_names, must_be_immutable, non_constant_identifier_names, avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:notes_app/models/style/app_style.dart';
+import 'package:notes_app/style/app_style.dart';
 
 class NoteReaderScreen extends StatefulWidget {
   NoteReaderScreen(this.doc, {Key? key}) : super(key: key);
@@ -51,7 +53,6 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     color_id = widget.doc["color_id"];
     note_title = widget.doc["note_title"];

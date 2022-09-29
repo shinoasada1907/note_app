@@ -1,9 +1,11 @@
+// ignore_for_file: prefer_final_fields, avoid_print, body_might_complete_normally_nullable, empty_catches
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:notes_app/views/screens/forgotpassword.dart';
-import 'package:notes_app/views/screens/home_screen.dart';
-import 'package:notes_app/views/screens/register.dart';
+import 'package:notes_app/screens/forgotpassword.dart';
+import 'package:notes_app/screens/home_screen.dart';
+import 'package:notes_app/screens/register.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   String iduser = "";
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  bool passvisible = true;
 
   Future<User?> loginUsingEmailPasswrd(
       {required String email,
@@ -59,9 +62,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
+    return Scaffold(
+      body: Center(
+        child: Container(
           margin: const EdgeInsets.all(24),
           child: SingleChildScrollView(
             child: Column(
@@ -117,18 +120,38 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         const SizedBox(height: 10),
-        TextField(
-          controller: _passwordController,
-          decoration: InputDecoration(
-            hintText: "Password",
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none),
-            fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            filled: true,
-            prefixIcon: const Icon(Icons.person),
-          ),
-          obscureText: true,
+        Stack(
+          children: [
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(
+                hintText: "Password",
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                    borderSide: BorderSide.none),
+                fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                filled: true,
+                prefixIcon: const Icon(Icons.person),
+              ),
+              obscureText: passvisible,
+            ),
+            Positioned(
+              right: 10,
+              bottom: 5,
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    passvisible = !passvisible;
+                  });
+                },
+                icon: Icon(
+                  passvisible ? Icons.visibility : Icons.visibility_off,
+                  size: 30,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(
           height: 10,
@@ -200,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ForgotPass(),
+            builder: (context) => const ForgotPass(),
           ),
         );
       },
@@ -220,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => RegisterPage(),
+                builder: (context) => const RegisterPage(),
               ),
             );
           },
